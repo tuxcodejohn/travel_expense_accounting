@@ -12,6 +12,7 @@
 %\usepackage{colortbl}
 \usepackage{hhline}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{datetime}
 
@@ -78,8 +79,11 @@
 	\end{tabularx}
 \end{table}
 
-\begin{table}
-	\begin{tabularx}{\textwidth}{|c|c|X|c|c|c|}
+%\begin{table}
+	\setlength\LTleft{0pt}
+	\setlength\LTright{0pt}
+	%\begin{longtable}{@{\extracolsep{\fill}}|c|c|l|c|c|c|} % FIXME full width does not work well with \rowcolor
+	\begin{longtable}{|c|c|l|c|c|c|}
 	\hline
 	
 	\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
@@ -119,10 +123,10 @@
 	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
 	\rowcolor{OrtGray}
 	\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
-	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
+	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
 	\rowcolor{OrtGray}
-	\multicolumn{3}{|l}{ ~ } & \multicolumn{1}{r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ % \cline{4-6}
-	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
+	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
+	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
 	\rowcolor{OrtGray}
 	\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
 
@@ -142,7 +146,7 @@
 	\rowcolor{OrtGray}
 	\multicolumn{6}{|l|}{ ~ } \\
 	\hline
-	\end{tabularx}
-\end{table}
+	\end{longtable}
+%\end{table}
 
 \end{document}
