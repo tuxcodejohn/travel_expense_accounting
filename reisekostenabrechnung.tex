@@ -1,0 +1,148 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Header Area
+
+\documentclass[a4paper,10pt]{scrartcl}
+
+\usepackage{a4wide}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{xcolor,colortbl}
+%\usepackage{colortbl}
+\usepackage{hhline}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{datetime}
+
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+
+%\usepackage{showframe} % blendet Seitenränder ein, nur zum Test
+
+\definecolor{OrtGray}{gray}{0.75}
+\newcommand{\spcell}[2][c]{%
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Configuration Area
+
+\def \TravName      { Handels Reisender } % Travelers name
+\def \TravTarget    { Münchhausen }       % Travelers target
+\def \TravStartedOn { \formatdate{01}{01}{2014} } % date of start
+\def \TravStartedAt { \formattime{08}{45}{00} }   % time of start
+\def \TravEndedOn   { \formatdate{05}{01}{2014} } % date of end
+\def \TravEndedAt   { \formattime{18}{15}{00} }   % time of end
+\def \TravReason    { Inbetriebnahme Automatisierung. Kann ein sehr langer Text sein. }
+\def \TravProjNr    { PRJ001 }
+
+\def \NrShortDays  {2} % >8h <24h
+\def \NrFullDays   {3} % =24h
+\def \NrBreakfasts {4} % Nr of days you got free breakfast
+\def \NrLunches    {0} % Nr of days you got free lunch
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Document Area
+\title{Reisekostenabrechnung}
+\author{\TravName}
+\date{\today}
+
+\begin{document}
+
+
+\begin{table}
+	\begin{tabularx}{\textwidth}{lXlX}
+	\textbf{Reisender:}                  & \multicolumn{3}{l}{ \TravName }                     \\
+	\textbf{Reiseziel:}                  & \multicolumn{3}{l}{ \TravTarget }                   \\
+	\textbf{Reisebeginn:}                & \TravStartedOn & \textbf{Uhrzeit:} & \TravStartedAt \\
+	\textbf{Reiseende:}                  & \TravEndedOn   & \textbf{Uhrzeit:} & \TravEndedAt   \\
+        \textbf{Reisezweck:}                 & \multicolumn{3}{l}{ \TravReason }                   \\
+	\textbf{Verkaufsauftr./Projekt-Nr.:} & \multicolumn{3}{l}{ \TravProjNr }
+	\end{tabularx}
+\end{table}
+
+\begin{table}
+	\begin{tabularx}{\textwidth}{|c|c|X|c|c|c|}
+	\hline
+	\multicolumn{6}{|l|}{\textbf{Verpflegung pro Kalendertag}} \\
+	\hline
+	\rowcolor{OrtGray}
+	~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
+	~ & \NrShortDays  & 8:01 -- 23:59 Stunden & ~                                   & ~ & ~                                 \\ \cline{1-5}
+	~ & \NrFullDays   & 24 Stunden            & ~                                   & ~ & ~                                 \\ \cline{1-5}
+	~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \cline{1-5}
+	~ & \NrBreakfasts & Frühstück             & ~                                   & ~ & ~                                 \\ \cline{1-5}
+	~ & \NrLunches    & Mittagessen           & ~                                   & ~ & ~                                 \\ \hline
+	\multicolumn{3}{|X}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.} & \multicolumn{2}{c}{\textbf{Summe VMA:}} & \textbf{120,00 \texteuro} \\ 
+	\hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}
+	\begin{tabularx}{\textwidth}{|c|c|X|c|c|c|}
+	\hline
+	
+	\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
+	\hline
+	\rowcolor{OrtGray}
+	\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+	1  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+	2  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+	3  & ~      & ~            & ~     & ~                            & ~                                \\ \hline
+
+	\multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
+	\hline
+	\rowcolor{OrtGray}
+	\# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Sat \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+	1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+	2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+	3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
+
+	\multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
+	\hline
+	\rowcolor{OrtGray}
+	\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+	1  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+	2  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+	3  & ~     & ~            & ~     & ~                            & ~                                \\ \hline
+
+	\hline
+	\hline
+
+	\rowcolor{OrtGray}
+	\multicolumn{6}{|l|}{ ~ } \\
+	\rowcolor{OrtGray}
+	\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+	\rowcolor{OrtGray}
+	\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+	\rowcolor{OrtGray}
+	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+	\rowcolor{OrtGray}
+	\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
+	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
+	\rowcolor{OrtGray}
+	\multicolumn{3}{|l}{ ~ } & \multicolumn{1}{r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ % \cline{4-6}
+	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
+	\rowcolor{OrtGray}
+	\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
+
+	\hline
+	\multicolumn{6}{l}{ ~ } \\
+	\hline
+
+	\rowcolor{OrtGray}
+	\multicolumn{6}{|l|}{ ~ } \\
+	\rowcolor{OrtGray}
+	\multicolumn{3}{|r}{ \textbf{Bestätigung der Summe durch den Reisenden} } & \multicolumn{3}{r|}{ ~ } \\ 
+	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---}
+	\rowcolor{OrtGray}
+	\multicolumn{3}{|r}{ ~ } & \multicolumn{1}{l}{ \emph{Ort/Datum} } & \multicolumn{2}{r|}{ \emph{Unterschrift} }  \\
+	\rowcolor{OrtGray}
+	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+	\rowcolor{OrtGray}
+	\multicolumn{6}{|l|}{ ~ } \\
+	\hline
+	\end{tabularx}
+\end{table}
+
+\end{document}
