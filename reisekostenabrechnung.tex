@@ -25,6 +25,9 @@
 \newcommand{\spcell}[2][c]{%
 	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
 
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Configuration Area
 
@@ -79,74 +82,70 @@
 	\end{tabularx}
 \end{table}
 
-%\begin{table}
-	\setlength\LTleft{0pt}
-	\setlength\LTright{0pt}
-	%\begin{longtable}{@{\extracolsep{\fill}}|c|c|l|c|c|c|} % FIXME full width does not work well with \rowcolor
-	\begin{longtable}{|c|c|l|c|c|c|}
-	\hline
-	
-	\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	2  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	3  & ~      & ~            & ~     & ~                            & ~                                \\ \hline
+%\begin{longtable}{@{\extracolsep{\fill}}|c|c|l|c|c|c|} % FIXME full width does not work well with \rowcolor
+\begin{longtable}{|c|c|l|c|c|c|}
+\hline
 
-	\multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Sat \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
-	2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
-	3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
+\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
+\hline
+\rowcolor{OrtGray}
+\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+2  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+3  & ~      & ~            & ~     & ~                            & ~                                \\ \hline
 
-	\multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	2  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	3  & ~     & ~            & ~     & ~                            & ~                                \\ \hline
+\multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
+\hline
+\rowcolor{OrtGray}
+\# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Sat \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
 
-	\hline
-	\hline
+\multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
+\hline
+\rowcolor{OrtGray}
+\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+2  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+3  & ~     & ~            & ~     & ~                            & ~                                \\ \hline
 
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
-	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
-	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
+\hline
+\hline
 
-	\hline
-	\multicolumn{6}{l}{ ~ } \\
-	\hline
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
 
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\rowcolor{OrtGray}
-	\multicolumn{3}{|r}{ \textbf{Bestätigung der Summe durch den Reisenden} } & \multicolumn{3}{r|}{ ~ } \\ 
-	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---}
-	\rowcolor{OrtGray}
-	\multicolumn{3}{|r}{ ~ } & \multicolumn{1}{l}{ \emph{Ort/Datum} } & \multicolumn{2}{r|}{ \emph{Unterschrift} }  \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\hline
-	\end{longtable}
-%\end{table}
+\hline
+\multicolumn{6}{l}{ ~ } \\
+\hline
+
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\rowcolor{OrtGray}
+\multicolumn{3}{|r}{ \textbf{Bestätigung der Summe durch den Reisenden} } & \multicolumn{3}{r|}{ ~ } \\ 
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---}
+\rowcolor{OrtGray}
+\multicolumn{3}{|r}{ ~ } & \multicolumn{1}{l}{ \emph{Ort/Datum} } & \multicolumn{2}{r|}{ \emph{Unterschrift} }  \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\hline
+\end{longtable}
 
 \end{document}
