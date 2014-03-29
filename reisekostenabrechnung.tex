@@ -9,9 +9,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp}
 \usepackage{xcolor,colortbl}
-%\usepackage{colortbl}
 \usepackage{hhline}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{datetime}
 
@@ -23,6 +23,9 @@
 \definecolor{OrtGray}{gray}{0.75}
 \newcommand{\spcell}[2][c]{%
 	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Configuration Area
@@ -42,7 +45,14 @@
 \def \NrLunches    {0} % Nr of days you got free lunch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fees
+
+\def \FeeShortDay  {12}
+\def \FeeFullDay   {24}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Document Area
+
 \title{Reisekostenabrechnung}
 \author{\TravName}
 \date{\today}
@@ -61,88 +71,86 @@
 	\end{tabularx}
 \end{table}
 
-\begin{table}
-	\begin{tabularx}{\textwidth}{|c|c|X|c|c|c|}
-	\hline
-	\multicolumn{6}{|l|}{\textbf{Verpflegung pro Kalendertag}} \\
-	\hline
-	\rowcolor{OrtGray}
-	~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
-	~ & \NrShortDays  & 8:01 -- 23:59 Stunden & ~                                   & ~ & ~                                 \\ \cline{1-5}
-	~ & \NrFullDays   & 24 Stunden            & ~                                   & ~ & ~                                 \\ \cline{1-5}
-	~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \cline{1-5}
-	~ & \NrBreakfasts & Frühstück             & ~                                   & ~ & ~                                 \\ \cline{1-5}
-	~ & \NrLunches    & Mittagessen           & ~                                   & ~ & ~                                 \\ \hline
-	\multicolumn{3}{|X}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.} & \multicolumn{2}{c}{\textbf{Summe VMA:}} & \textbf{120,00 \texteuro} \\ 
-	\hline
-	\end{tabularx}
-\end{table}
+%\begin{longtable}{@{\extracolsep{\fill}}|c|c|l|c|c|c|} % FIXME full width does not work well with \rowcolor
+\begin{longtable}{|c|c|l|c|c|c|}
+\hline
 
-\begin{table}
-	\begin{tabularx}{\textwidth}{|c|c|X|c|c|c|}
-	\hline
-	
-	\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	2  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	3  & ~      & ~            & ~     & ~                            & ~                                \\ \hline
+\multicolumn{6}{|l|}{\textbf{Verpflegung pro Kalendertag}} \\
+\hline
+\rowcolor{OrtGray}
+~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
+~ & \NrShortDays  & 8:01 -- 23:59 Stunden & \FeeShortDay                        & ~ & ~                                 \\ \cline{1-5}
+~ & \NrFullDays   & 24 Stunden            & \FeeFullDay                         & ~ & ~                                 \\ \cline{1-5}
+~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \cline{1-5}
+~ & \NrBreakfasts & Frühstück             & ~                                   & ~ & ~                                 \\ \cline{1-5}
+~ & \NrLunches    & Mittagessen           & ~                                   & ~ & ~                                 \\ \hline
+\rowcolor{OrtGray}
+\multicolumn{3}{|p{7cm}}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.} & \multicolumn{1}{|r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
+\hline
 
-	\multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Sat \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
-	2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
-	3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
+\multicolumn{6}{l}{ ~ } \\
 
-	\multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
-	\hline
-	\rowcolor{OrtGray}
-	\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
-	1  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	2  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
-	3  & ~     & ~            & ~     & ~                            & ~                                \\ \hline
+\hline
+\multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
+\hline
+\rowcolor{OrtGray}
+\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+2  & ~      & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+3  & ~      & ~            & ~     & ~                            & ~                                \\ \hline
 
-	\hline
-	\hline
+\multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
+\hline
+\rowcolor{OrtGray}
+\# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Sat \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \cline{1-5}
+3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
 
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
-	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
-	\rowcolor{OrtGray}
-	\multicolumn{3}{|l}{ ~ } & \multicolumn{1}{r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ % \cline{4-6}
-	\hhline{>{\arrayrulecolor{OrtGray}}---->{\arrayrulecolor{black}}--}
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
+\multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
+\hline
+\rowcolor{OrtGray}
+\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+1  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+2  & ~     & ~            & ~     & ~                            & ~                                \\ \cline{1-5}
+3  & ~     & ~            & ~     & ~                            & ~                                \\ \hline
 
-	\hline
-	\multicolumn{6}{l}{ ~ } \\
-	\hline
+\hline
+\hline
 
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\rowcolor{OrtGray}
-	\multicolumn{3}{|r}{ \textbf{Bestätigung der Summe durch den Reisenden} } & \multicolumn{3}{r|}{ ~ } \\ 
-	\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---}
-	\rowcolor{OrtGray}
-	\multicolumn{3}{|r}{ ~ } & \multicolumn{1}{l}{ \emph{Ort/Datum} } & \multicolumn{2}{r|}{ \emph{Unterschrift} }  \\
-	\rowcolor{OrtGray}
-	\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-	\rowcolor{OrtGray}
-	\multicolumn{6}{|l|}{ ~ } \\
-	\hline
-	\end{tabularx}
-\end{table}
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ %\cline{2-2}
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---} % FIXME top line should span the whole "Summe Belege"
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
+
+\hline
+\multicolumn{6}{l}{ ~ } \\
+\hline
+
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\rowcolor{OrtGray}
+\multicolumn{3}{|r}{ \textbf{Bestätigung der Summe durch den Reisenden} } & \multicolumn{3}{r|}{ ~ } \\ 
+\hhline{>{\arrayrulecolor{OrtGray}}--->{\arrayrulecolor{black}}---}
+\rowcolor{OrtGray}
+\multicolumn{3}{|r}{ ~ } & \multicolumn{1}{l}{ \emph{Ort/Datum} } & \multicolumn{2}{r|}{ \emph{Unterschrift} }  \\
+\rowcolor{OrtGray}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
+\rowcolor{OrtGray}
+\multicolumn{6}{|l|}{ ~ } \\
+\hline
+\end{longtable}
 
 \end{document}
