@@ -14,11 +14,10 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{datetime}
+\usepackage{fp}
 
 \usepackage{lmodern}
 \renewcommand{\familydefault}{\sfdefault}
-
-%\usepackage{showframe} % blendet Seitenränder ein, nur zum Test
 
 \definecolor{OrtGray}{gray}{0.75}
 \newcommand{\spcell}[2][c]{%
@@ -39,17 +38,35 @@
 \def \TravReason    { Inbetriebnahme Automatisierung. Kann ein sehr langer Text sein. }
 \def \TravProjNr    { PRJ001 }
 
-\def \NrShortDays  {2} % >8h <24h
-\def \NrFullDays   {3} % =24h
-\def \NrBreakfasts {4} % Nr of days you got free breakfast
-\def \NrLunches    {0} % Nr of days you got free lunch
+\FPset{NrShortDays}  {2} % >8h <24h
+\FPset{NrFullDays}   {3} % =24h
+\FPset{NrBreakfasts} {4} % Nr of days you got free breakfast
+\FPset{NrLunches}    {1} % Nr of days you got free lunch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fees
 
-\def \FeeShortDay  {12}
-\def \FeeFullDay   {24}
+%\def \FeeShortDay      {12}
+%\def \FeeFullDay       {24}
+%\def \FeePercBreakfast {0.2}
+%\def \FeePercLunch     {0.4}
 
+\FPset{FeeShortDay}      {12}
+\FPset{FeeFullDay}       {24}
+\FPset{FeePercBreakfast} {0.2}
+\FPset{FeePercLunch}     {0.4}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Caculations
+
+\FPeval{FeeBreakfast}{trunc((-1*FeeFullDay*FeePercBreakfast):2)}
+\FPeval{FeeLunch}{trunc((-1*FeeFullDay*FeePercLunch):2)}
+
+\FPeval{AbsoluteShortDays}{trunc((FeeShortDay*NrShortDays):2)}
+\FPeval{AbsoluteFullDays}{trunc((FeeFullDay*NrFullDays):2)}
+\FPeval{AbsoluteBreakfasts}{trunc((FeeBreakfast*NrBreakfasts):2)}
+\FPeval{AbsoluteLunches}{trunc((FeeLunch*NrLunches):2)}
+\FPeval{SumFare}{trunc((AbsoluteShortDays+AbsoluteFullDays+AbsoluteBreakfasts+AbsoluteLunches):2)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Document Area
 
@@ -79,13 +96,13 @@
 \hline
 \rowcolor{OrtGray}
 ~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
-~ & \NrShortDays  & 8:01 -- 23:59 Stunden & \FeeShortDay                        & ~ & ~                                 \\ \cline{1-5}
-~ & \NrFullDays   & 24 Stunden            & \FeeFullDay                         & ~ & ~                                 \\ \cline{1-5}
+~ & \NrShortDays  & 8:01 -- 23:59 Stunden & \FeeShortDay                        & ~ & \AbsoluteShortDays                \\ \cline{1-5}
+~ & \NrFullDays   & 24 Stunden            & \FeeFullDay                         & ~ & \AbsoluteFullDays                 \\ \cline{1-5}
 ~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \cline{1-5}
-~ & \NrBreakfasts & Frühstück             & ~                                   & ~ & ~                                 \\ \cline{1-5}
-~ & \NrLunches    & Mittagessen           & ~                                   & ~ & ~                                 \\ \hline
+~ & \NrBreakfasts & Frühstück             & \FeeBreakfast                       & ~ & \AbsoluteBreakfasts               \\ \cline{1-5}
+~ & \NrLunches    & Mittagessen           & \FeeLunch                           & ~ & \AbsoluteLunches                  \\ \hline
 \rowcolor{OrtGray}
-\multicolumn{3}{|p{7cm}}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.} & \multicolumn{1}{|r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\  %\cline{1-6}
+\multicolumn{3}{|p{8cm}}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.} & \multicolumn{1}{|r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{\SumFare \texteuro} } \\  %\cline{1-6}
 \hline
 
 \multicolumn{6}{l}{ ~ } \\
