@@ -1,5 +1,5 @@
 all:
-	pdflatex reisekostenabrechnung.tex
+	lualatex reisekostenabrechnung.tex
 
 clean:
 	rm *.log *.aux *.pdf

@@ -6,7 +6,7 @@
 \usepackage{a4wide}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{luainputenc}
 \usepackage{textcomp}
 \usepackage[table]{xcolor}
 \usepackage{hhline}
@@ -15,7 +15,7 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{datetime}
-\usepackage{fp}
+\usepackage{numprint}
 
 %\usepackage{showframe}
 
@@ -29,6 +29,8 @@
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
 
+\nprounddigits{2}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Configuration Area
 
@@ -41,30 +43,38 @@
 \def \TravReason    { Inbetriebnahme Automatisierung. Kann ein sehr langer Text sein. }
 \def \TravProjNr    { PRJ001 }
 
-\FPset{NrShortDays}  {2} % >8h <24h
-\FPset{NrFullDays}   {3} % =24h
-\FPset{NrBreakfasts} {4} % Nr of days you got free breakfast
-\FPset{NrLunches}    {1} % Nr of days you got free lunch
+\directlua {
+	NrShortDays  = 2 % >8h <24h
+	NrFullDays   = 3 % =24h
+	NrBreakfasts = 4 % Nr of days you got free breakfast
+	NrLunches    = 1 % Nr of days you got free lunch
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fees
 
-\FPset{FeeShortDay}      {12}
-\FPset{FeeFullDay}       {24}
-\FPset{FeePercBreakfast} {0.2}
-\FPset{FeePercLunch}     {0.4}
+\directlua {
+	FeeShortDay       = 12
+	FeeFullDay        = 24
+	FeePercBreakfast  = 0.2
+	FeePercLunch      = 0.4
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Caculations
 
-\FPeval{FeeBreakfast}{trunc((-1*FeeFullDay*FeePercBreakfast):2)}
-\FPeval{FeeLunch}{trunc((-1*FeeFullDay*FeePercLunch):2)}
+\directlua {
+	FeeBreakfast = -1 * FeeFullDay * FeePercBreakfast
+	FeeLunch     = -1 * FeeFullDay * FeePercLunch
 
-\FPeval{AbsoluteShortDays}{trunc((FeeShortDay*NrShortDays):2)}
-\FPeval{AbsoluteFullDays}{trunc((FeeFullDay*NrFullDays):2)}
-\FPeval{AbsoluteBreakfasts}{trunc((FeeBreakfast*NrBreakfasts):2)}
-\FPeval{AbsoluteLunches}{trunc((FeeLunch*NrLunches):2)}
-\FPeval{SumFare}{trunc((AbsoluteShortDays+AbsoluteFullDays+AbsoluteBreakfasts+AbsoluteLunches):2)}
+
+	AbsoluteShortDays  = FeeShortDay * NrShortDays
+	AbsoluteFullDays   = FeeFullDay * NrFullDays
+	AbsoluteBreakfasts = FeeBreakfast * NrBreakfasts
+	AbsoluteLunches    = FeeLunch * NrLunches
+	SumFare            = AbsoluteShortDays + AbsoluteFullDays + AbsoluteBreakfasts + AbsoluteLunches
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Document Area
 
@@ -93,16 +103,16 @@
 \multicolumn{6}{|l|}{\textbf{Verpflegung pro Kalendertag}} \\
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
+~ & Anzahl Tage   & Pauschale              & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
 \taburowcolors 1 {white .. white}
-~ & \NrShortDays  & 8:01 -- 23:59 Stunden & \FeeShortDay                        & ~ & \AbsoluteShortDays                \\ \tabucline{1-5}
-~ & \NrFullDays   & 24 Stunden            & \FeeFullDay                         & ~ & \AbsoluteFullDays                 \\ \tabucline{1-5}
-~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \tabucline{1-5}
-~ & \NrBreakfasts & Frühstück             & \FeeBreakfast                       & ~ & \AbsoluteBreakfasts               \\ \tabucline{1-5}
-~ & \NrLunches    & Mittagessen           & \FeeLunch                           & ~ & \AbsoluteLunches                  \\ 
+~ & \directlua{ tex.sprint(NrShortDays) }  & 8:01 -- 23:59 Stunden               & \directlua{ tex.sprint(FeeShortDay) }  & ~ & \numprint{\directlua{ tex.sprint(AbsoluteShortDays) }}              \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrFullDays) }   & 24 Stunden                          & \directlua{ tex.sprint(FeeFullDay) }   & ~ & \numprint{\directlua{ tex.sprint(AbsoluteFullDays) }}               \\ \tabucline{1-5}
+~ & ~             & ~                      & ~                                   & ~                                      & ~                                                         \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrBreakfasts) } & Frühstück                           & \numprint{\directlua{ tex.sprint(FeeBreakfast) }} & ~ & \numprint{\directlua{ tex.sprint(AbsoluteBreakfasts) }}             \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrLunches) }    & Mittagessen                         & \numprint{\directlua{ tex.sprint(FeeLunch) }}     & ~ & \numprint{\directlua{ tex.sprint(AbsoluteLunches) }}                \\ 
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-\multicolumn{3}{|l}{\parbox[t]{7cm}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.}} & \multicolumn{1}{r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{\SumFare \texteuro} } \\ 
+\multicolumn{3}{|l}{\parbox[t]{7cm}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.}} & \multicolumn{1}{r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(SumFare) }} \texteuro} } \\ 
 \taburowcolors 1 {white .. white}
 
 \hline
