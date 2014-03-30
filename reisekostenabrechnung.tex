@@ -6,7 +6,7 @@
 \usepackage{a4wide}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{luainputenc}
 \usepackage{textcomp}
 \usepackage[table]{xcolor}
 \usepackage{hhline}
@@ -14,8 +14,9 @@
 \usepackage{tabu}
 \usepackage{longtable}
 \usepackage{multirow}
-\usepackage{datetime}
-\usepackage{fp}
+\usepackage[yyyymmdd]{datetime}
+\usepackage{numprint}
+\usepackage{luacode}
 
 %\usepackage{showframe}
 
@@ -29,6 +30,10 @@
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
 
+\nprounddigits{2}
+
+\renewcommand{\dateseparator}{-}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Configuration Area
 
@@ -41,30 +46,111 @@
 \def \TravReason    { Inbetriebnahme Automatisierung. Kann ein sehr langer Text sein. }
 \def \TravProjNr    { PRJ001 }
 
-\FPset{NrShortDays}  {2} % >8h <24h
-\FPset{NrFullDays}   {3} % =24h
-\FPset{NrBreakfasts} {4} % Nr of days you got free breakfast
-\FPset{NrLunches}    {1} % Nr of days you got free lunch
+\begin{luacode*}
+	NrShortDays  = 2 -- >8h <24h
+	NrFullDays   = 3 -- =24h
+	NrBreakfasts = 4 -- Nr of days you got free breakfast
+	NrLunches    = 1 -- Nr of days you got free lunch
+
+	MoneyInAdvance = 150.00
+
+	-- night stops
+	NightStopCurrency        = '\\texteuro'
+	NightCurrencyTranslation = 1 -- from currency to Euro
+	NightStops = {
+		-- nr of nights, description              | date                        | orig. currency
+		{ 1            , "Landgasthof Ungemütlich", "\\formatdate{03}{01}{2014}", 79.20          },
+		{ 2            , "Zum Wanderer"           , "\\formatdate{04}{01}{2014}", 50.87          },
+		{ 1            , "Hotel Garni Lang"       , "\\formatdate{06}{01}{2014}", 40.00          },
+	}
+
+	-- private car
+	PrivateCar = {
+		-- distance(km), description             | date                         | mileage rate (0.30 Euro/km for private cars)
+		{ 500          , "Anfahrt Fabrik"        , "\\formatdate{03}{01}{2014}", 0.30          },
+		{ 37           , "Einkaufen"             , "\\formatdate{04}{01}{2014}", 0.30          },
+		{ 121          , "Verfolgungsjagt"       , "\\formatdate{06}{01}{2014}", 0.30          },
+	}
+
+	-- other expenses
+	OtherExpensesCurrency            = '\\texteuro'
+	OtherExpensesCurrentyTranslation = 1 -- from currency to Euro
+	OtherExpenses = {
+		-- company     , description               | date                        | orig. currency
+		{ "Taxi Müller", "Münchhausen -> Flughafen", "\\formatdate{03}{01}{2014}", 50.00          },
+	}
+
+	---------------------------------------------------------
+	-- Functions - no configuration, stop looking
+	
+	function PrintTable (DataArray)
+		for i = 1, table.getn(DataArray) do
+			tex.sprint(tostring(i), '&', DataArray[i][1], '&', DataArray[i][2], '&', DataArray[i][3], '&', "\\numprint{", DataArray[i][4] , "}", '&',  "\\numprint{", (NightCurrencyTranslation * DataArray[i][4]) , "}", "\\\\ ")
+			if i ~= table.getn(DataArray) then
+				tex.sprint("\\tabucline{1-5}")
+			else
+				tex.sprint("\\hline")
+			end
+		end
+	end
+
+	function SumExpenses (DataArray)
+		expenses = 0
+		for i = 1, table.getn(DataArray) do
+			expenses = expenses + (NightCurrencyTranslation * DataArray[i][4])
+		end
+		return expenses
+	end
+
+	function PrintTablePrivCar (DataArray)
+		for i = 1, table.getn(DataArray) do
+			tex.sprint(tostring(i), '&', DataArray[i][1], '&', DataArray[i][2], '&', DataArray[i][3], '&', "\\numprint{", DataArray[i][4] , "}", '&',  "\\numprint{", (DataArray[i][1] * DataArray[i][4]) , "}", "\\\\ ")
+			if i ~= table.getn(DataArray) then
+				tex.sprint("\\tabucline{1-5}")
+			else
+				tex.sprint("\\hline")
+			end
+		end
+	end
+
+	function SumExpensesPrivCar (DataArray)
+		expenses = 0
+		for i = 1, table.getn(DataArray) do
+			expenses = expenses + (DataArray[i][1] * DataArray[i][4])
+		end
+		return expenses
+	end
+
+	function AllExpenses ()
+		return SumExpenses(NightStops) + SumExpensesPrivCar(PrivateCar) + SumExpenses(OtherExpenses) - MoneyInAdvance 
+	end
+\end{luacode*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fees
 
-\FPset{FeeShortDay}      {12}
-\FPset{FeeFullDay}       {24}
-\FPset{FeePercBreakfast} {0.2}
-\FPset{FeePercLunch}     {0.4}
+\directlua {
+	FeeShortDay       = 12
+	FeeFullDay        = 24
+	FeePercBreakfast  = 0.2
+	FeePercLunch      = 0.4
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Caculations
 
-\FPeval{FeeBreakfast}{trunc((-1*FeeFullDay*FeePercBreakfast):2)}
-\FPeval{FeeLunch}{trunc((-1*FeeFullDay*FeePercLunch):2)}
+\directlua {
+	FeeBreakfast = -1 * FeeFullDay * FeePercBreakfast
+	FeeLunch     = -1 * FeeFullDay * FeePercLunch
 
-\FPeval{AbsoluteShortDays}{trunc((FeeShortDay*NrShortDays):2)}
-\FPeval{AbsoluteFullDays}{trunc((FeeFullDay*NrFullDays):2)}
-\FPeval{AbsoluteBreakfasts}{trunc((FeeBreakfast*NrBreakfasts):2)}
-\FPeval{AbsoluteLunches}{trunc((FeeLunch*NrLunches):2)}
-\FPeval{SumFare}{trunc((AbsoluteShortDays+AbsoluteFullDays+AbsoluteBreakfasts+AbsoluteLunches):2)}
+
+	AbsoluteShortDays  = FeeShortDay * NrShortDays
+	AbsoluteFullDays   = FeeFullDay * NrFullDays
+	AbsoluteBreakfasts = FeeBreakfast * NrBreakfasts
+	AbsoluteLunches    = FeeLunch * NrLunches
+	SumFare            = AbsoluteShortDays + AbsoluteFullDays + AbsoluteBreakfasts + AbsoluteLunches
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Document Area
 
@@ -93,16 +179,16 @@
 \multicolumn{6}{|l|}{\textbf{Verpflegung pro Kalendertag}} \\
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-~ & Anzahl Tage   & Pauschale             & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
+~ & Anzahl Tage   & Pauschale              & \spcell{Pauschale \\ {[\texteuro]}} & ~ & \spcell{Betrag \\ {[\texteuro]}}	\\ \hline
 \taburowcolors 1 {white .. white}
-~ & \NrShortDays  & 8:01 -- 23:59 Stunden & \FeeShortDay                        & ~ & \AbsoluteShortDays                \\ \tabucline{1-5}
-~ & \NrFullDays   & 24 Stunden            & \FeeFullDay                         & ~ & \AbsoluteFullDays                 \\ \tabucline{1-5}
-~ & ~             & ~                     & ~                                   & ~ & ~                                 \\ \tabucline{1-5}
-~ & \NrBreakfasts & Frühstück             & \FeeBreakfast                       & ~ & \AbsoluteBreakfasts               \\ \tabucline{1-5}
-~ & \NrLunches    & Mittagessen           & \FeeLunch                           & ~ & \AbsoluteLunches                  \\ 
+~ & \directlua{ tex.sprint(NrShortDays) }  & 8:01 -- 23:59 Stunden               & \directlua{ tex.sprint(FeeShortDay) }  & ~ & \numprint{\directlua{ tex.sprint(AbsoluteShortDays) }}              \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrFullDays) }   & 24 Stunden                          & \directlua{ tex.sprint(FeeFullDay) }   & ~ & \numprint{\directlua{ tex.sprint(AbsoluteFullDays) }}               \\ \tabucline{1-5}
+~ & ~             & ~                      & ~                                   & ~                                      & ~                                                         \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrBreakfasts) } & Frühstück                           & \numprint{\directlua{ tex.sprint(FeeBreakfast) }} & ~ & \numprint{\directlua{ tex.sprint(AbsoluteBreakfasts) }}             \\ \tabucline{1-5}
+~ & \directlua{ tex.sprint(NrLunches) }    & Mittagessen                         & \numprint{\directlua{ tex.sprint(FeeLunch) }}     & ~ & \numprint{\directlua{ tex.sprint(AbsoluteLunches) }}                \\ 
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-\multicolumn{3}{|l}{\parbox[t]{7cm}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.}} & \multicolumn{1}{r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{\SumFare \texteuro} } \\ 
+\multicolumn{3}{|l}{\parbox[t]{7cm}{Der VMA wird nach Prüfung mit der nächsten Gehaltsabrechnung überwiesen.}} & \multicolumn{1}{r}{ \textbf{Summe VMA:} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(SumFare) }} \texteuro} } \\ 
 \taburowcolors 1 {white .. white}
 
 \hline
@@ -113,31 +199,29 @@
 \multicolumn{6}{|l|}{\textbf{Übernachtung}} \\
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+\# & Anzahl & Beschreibung & Datum & \spcell{Urspr.währung \\ {[}\directlua{ tex.sprint(NightStopCurrency) }{]} } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
 \taburowcolors 1 {white .. white}
-1  & ~      & ~            & ~     & ~                            & ~                                \\ \tabucline{1-5}
-2  & ~      & ~            & ~     & ~                            & ~                                \\ \tabucline{1-5}
-3  & ~      & ~            & ~     & ~                            & ~                                \\ 
-
-\hline
+\directlua{
+	PrintTable(NightStops)
+}
 
 \multicolumn{6}{|l|}{\textbf{Fahrtkosten privater PKW}} \\
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
 \# & \spcell{Strecke \\ {[km]}} & Beschreibung & Datum & \spcell{Km Satz \\ {[\texteuro]/km}} & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
 \taburowcolors 1 {white .. white}
-1  & ~                          & ~            & ~     & ~                                   & ~                                \\ \tabucline{1-5}
-2  & ~                          & ~            & ~     & ~                                   & ~                                \\ \tabucline{1-5}
-3  & ~                          & ~            & ~     & ~                                   & ~                                \\ \hline
+\directlua{
+	PrintTablePrivCar(PrivateCar)
+}
 
 \multicolumn{6}{|l|}{\textbf{Weitere Belege}} \\
 \hline
 \taburowcolors 1 {OrtGray .. OrtGray}
-\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ ~ } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
+\# & Firma & Beschreibung & Datum & \spcell{Urspr.währung \\ {[}\directlua{ tex.sprint(OtherExpensesCurrency) }{]} } & \spcell{Betrag \\ {[\texteuro]}} \\ \hline
 \taburowcolors 1 {white .. white}
-1  & ~     & ~            & ~     & ~                            & ~                                \\ \tabucline{1-5}
-2  & ~     & ~            & ~     & ~                            & ~                                \\ \tabucline{1-5}
-3  & ~     & ~            & ~     & ~                            & ~                                \\ 
+\directlua{
+	PrintTable(OtherExpenses)
+}
 
 \hline
 
@@ -147,11 +231,11 @@
 
 \taburowcolors 1 {OrtGray .. OrtGray}
 \multicolumn{6}{|l|}{ ~ } \\
-\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\
-\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ \tabucline[OrtGray]{1-3}\noalign{\kern-\arrayrulewidth} \tabucline{4-6}
-\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{0,00 \texteuro} } \\ \tabucline[OrtGray]{1-3}\noalign{\kern-\arrayrulewidth} \tabucline{4-6}
+\multicolumn{4}{|r}{ \textbf{Summe Übernachtungen} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(SumExpenses(NightStops)) }} \texteuro} } \\
+\multicolumn{4}{|r}{ \textbf{Summe Fahrtkosten Privat PKW} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(SumExpensesPrivCar(PrivateCar)) }} \texteuro} } \\
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{\numprint{\directlua{ tex.sprint(SumExpenses(OtherExpenses)) }} \texteuro} } \\
+\multicolumn{4}{|r}{ \textbf{Vorschuss} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(MoneyInAdvance) }} \texteuro} } \\ \tabucline[OrtGray]{1-3}\noalign{\kern-\arrayrulewidth} \tabucline{4-6}
+\multicolumn{4}{|r}{ \textbf{Summe Belege} } & \multicolumn{2}{r|}{ \textbf{ \numprint{\directlua{ tex.sprint(AllExpenses()) }} \texteuro} } \\ \tabucline[OrtGray]{1-3}\noalign{\kern-\arrayrulewidth} \tabucline{4-6}
 \multicolumn{6}{|l|}{ Die Summe der Belege wird nach Prüfung beim nächsten Überweisungstermin angewiesen. } \\
 
 \hline
