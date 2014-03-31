@@ -5,8 +5,9 @@
 
 \usepackage{a4wide}
 \usepackage[ngerman]{babel}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{luainputenc}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{luainputenc}
+\usepackage{fontspec}
 \usepackage{textcomp}
 \usepackage[table]{xcolor}
 \usepackage{hhline}
@@ -18,10 +19,22 @@
 \usepackage{numprint}
 \usepackage{luacode}
 
+
 %\usepackage{showframe}
 
-\usepackage{lmodern}
-\renewcommand{\familydefault}{\sfdefault}
+% modern style (you have it in lualatex!) of 
+% setting fonts:
+\setmainfont[Scale=.8]{Comic Sans MS}
+\setmainfont[Scale=1]{Linux Biolinum O}
+\setmonofont{Courier Prime}
+
+%% for company logo:
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\pgfdeclareimage[height=2cm]{Companylogo}{logo.pdf}
+
+%%
 
 \definecolor{OrtGray}{gray}{0.75}
 \newcommand{\spcell}[2][c]{%
@@ -36,7 +49,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Configuration Area
-
+\def \TravHeading   { Reisekostenabrechnung }
 \def \TravName      { Handels Reisender } % Travelers name
 \def \TravTarget    { Münchhausen }       % Travelers target
 \def \TravStartedOn { \formatdate{01}{01}{2014} } % date of start
@@ -152,14 +165,35 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Document Meta Information
+
+\usepackage[pdftex,
+	citebordercolor={0.9 0.9 1},
+	filebordercolor={0.9 0.9 1},
+	linkbordercolor={0.9 0.9 1},
+	pagebordercolor={0.9 0.9 1},
+	urlbordercolor={0.9 0.9 1},
+	pdfborder={0.9 0.9 1},
+	pagebackref,plainpages=false,pdfpagelabels=true]{hyperref}
+\hypersetup{%
+pdftitle={Reisekostenaberechnung \TravName},
+pdfauthor={\TravName},
+pdfkeywords={Reisekosten, Abrechnung, \TravName}, 
+pdfsubject={Reisekosten},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Document Area
 
-\title{Reisekostenabrechnung}
 \author{\TravName}
 \date{\today}
 
 \begin{document}
+%\Large{\TravHeading}
 
+\begin{tikzpicture}[remember picture, overlay]
+  \node [anchor=north east, inner sep=0pt]  at (current page.north east)
+     {\pgfuseimage{Companylogo}};
+\end{tikzpicture}
 
 \begin{table}
 	\begin{tabularx}{\textwidth}{lXlX}
